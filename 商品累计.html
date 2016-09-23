@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body,ul,p{margin:0;padding:0;}
+        li{list-style:none;}
+        strong,b{font-weight: normal;}
+        em,i{font-style: inherit;}
+        a{color:#000;text-decoration: none;}
+    </style>
+    <script src="tools.js"></script>
+<script>
+   /*
+        需求：
+            购买某一个商品，计算出小计
+            还要计算出共多少件 共花费多少钱 在购买的商品中找到最贵的单价
+
+        步骤：
+            每一个商品都可以加或减
+            加
+            写入个数
+                变量一直加
+                获取到当前的个数加一
+            写入小计
+                小计 = 个数*单价
+            减
+            写入个数
+                变量一直减
+                获取到当前的个数减一
+            写入小计
+                小计 = 个数*单价
+   */
+
+    window.onload = function(){
+
+        var list = $("#list");
+        var allLi = $("li",list);   //找到所有的li
+
+        var allStrong = $("strong",list); //找到所有的strong
+        var allEm = $("em",list); //找到所有的em
+
+        var totalNum = 0; //统计商品总数的
+        var totalPrice = 0; //统计商品的总价
+
+        var maxPrice = 0; // 最贵的单价
+
+        var total_p = $("#total_p");
+        var total_span = $("span",total_p);
+
+        //每一个li中都有加减操作
+
+        for( var i = 0; i < allLi.length; i++ ){
+            fn(allLi[i]);
+        }
+
+        function fn(li){
+            var btns = $("input",li);
+            var strong = $("strong",li)[0];
+            var price = $("em",li)[0]; //单价
+            var totalSpan = $("span",li)[0];//小计
+
+            var num = 0;  //统计当前商品的个数 
+            var priceNum =  parseFloat(price.innerHTML); //当前商品的单价 
+
+            //加
+            btns[1].onclick = function (){
+               num++;
+               strong.innerHTML = num;
+               totalSpan.innerHTML = num * priceNum;
+
+               //统计总数
+               totalNum++;
+               total_span[0].innerHTML = totalNum;
+               //统计总价
+
+               totalPrice += priceNum; 
+                total_span[1].innerHTML = totalPrice;
+                if(priceNum > maxPrice ){
+                    maxPrice = priceNum;
+                }
+
+                total_span[2].innerHTML = maxPrice;
+
+            };
+
+            //减
+            btns[0].onclick = function (){
+                if( num === 0 ) return;
+                num--;
+                strong.innerHTML = num;  
+                totalSpan.innerHTML = num * priceNum;
+                //统计总数
+                totalNum--; 
+                total_span[0].innerHTML = totalNum;
+                //统计总价
+               totalPrice -= priceNum;  //点击当前商品一次，就减一次商品的单价
+                total_span[1].innerHTML = totalPrice;
+                if( num === 0 ){
+                    maxPrice = 0;
+                    for( var i = 0; i < allStrong.length; i++ ){
+                        if( allStrong[i].innerHTML != 0 ){  
+                            if( maxPrice < allEm[i].innerHTML ){
+                                maxPrice = parseFloat(allEm[i].innerHTML);
+                            }
+                        }
+                    }
+                    total_span[2].innerHTML = maxPrice;
+                }
+            };
+        }
+    };
+</script>
+
+</head>
+<body>
+
+<ul id="list">
+    <li>
+    <input type="button" value="-">
+    <strong>0</strong>
+    <input type="button" value="+">
+    单价：<em>12.5</em>元
+    小计：<span>0</span>元
+  </li>
+  <li>
+    <input type="button" value="-">
+    <strong>0</strong>
+    <input type="button" value="+">
+    单价：<em>13.5</em>元
+    小计：<span>0</span>元
+  </li>
+  <li>
+    <input type="button" value="-">
+    <strong>0</strong>
+    <input type="button" value="+">
+    单价：<em>14.5</em>元
+    小计：<span>0</span>元
+  </li>
+  <li>
+    <input type="button" value="-">
+    <strong>0</strong>
+    <input type="button" value="+">
+    单价：<em>17.5</em>元
+    小计：<span>0</span>元
+  </li>
+  <li>
+    <input type="button" value="-">
+    <strong>0</strong>
+    <input type="button" value="+">
+    单价：<em>112.5</em>元
+    小计：<span>0</span>元
+  </li>
+    <li>
+    <input type="button" value="-">
+    <strong>0</strong>
+    <input type="button" value="+">
+    单价：<em>100.5</em>元
+    小计：<span>0</span>元
+  </li>
+  <li>
+    <input type="button" value="-">
+    <strong>0</strong>
+    <input type="button" value="+">
+    单价：<em>100.5</em>元
+    小计：<span>0</span>元
+  </li>
+  <li>
+    <input type="button" value="-">
+    <strong>0</strong>
+    <input type="button" value="+">
+    单价：<em>100.5</em>元
+    小计：<span>0</span>元
+  </li>
+  <li>
+    <input type="button" value="-">
+    <strong>0</strong>
+    <input type="button" value="+">
+    单价：<em>200.5</em>元
+    小计：<span>0</span>元
+  </li>
+ 
+</ul>
+
+<p id="total_p">
+商品合计共：<span>0</span>件，共花费了<span>0</span>元<br>
+其中最贵的商品单价是：<span>0</span>元
+</p>
+
+</body>
+</html>
